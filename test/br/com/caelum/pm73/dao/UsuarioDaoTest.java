@@ -3,6 +3,8 @@ package br.com.caelum.pm73.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
@@ -96,5 +98,27 @@ public class UsuarioDaoTest {
 
 		assertEquals(0L, total);
 	}
+	
+    @Test
+    public void deveRetornarLeiloesDeProdutosNovos() {
+        Usuario mauricio = new Usuario("Mauricio Aniche",
+                "mauricio@aniche.com.br");
+
+        Leilao produtoNovo = 
+                new Leilao("XBox", 700.0, mauricio, false);
+        Leilao produtoUsado = 
+                new Leilao("Geladeira", 1500.0, mauricio,true);
+
+        usuarioDao.salvar(mauricio);
+        leilaoDao.salvar(produtoNovo);
+        leilaoDao.salvar(produtoUsado);
+
+        List<Leilao> novos = leilaoDao.novos();
+
+        assertEquals(1, novos.size());
+        assertEquals("XBox", novos.get(0).getNome());
+    }
+
+	
 
 }
