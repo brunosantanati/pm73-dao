@@ -26,5 +26,18 @@ public class UsuarioDaoTest {
 
         session.close();
     }
+	
+	@Test
+	public void deveRetornarNuloSeNaoEncontrarUsuario() {
+		Session session = new CriadorDeSessao().getSession();
+		UsuarioDao usuarioDao = new UsuarioDao(session);
+
+		Usuario usuarioDoBanco = usuarioDao
+				.porNomeEEmail("João Joaquim", "joao@joaquim.com.br");
+
+		assertNull(usuarioDoBanco);
+
+		session.close();
+	}
 
 }
