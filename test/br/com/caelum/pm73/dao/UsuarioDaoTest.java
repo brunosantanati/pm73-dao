@@ -147,4 +147,25 @@ public class UsuarioDaoTest {
         assertEquals("Geladeira", antigos.get(0).getNome());
     }	
 
+    @Test
+    public void deveTrazerSomenteLeiloesAntigosHaMaisDe7Dias() {
+        Usuario mauricio = new Usuario("Mauricio Aniche",
+                "mauricio@aniche.com.br");
+
+        Leilao noLimite = 
+                new Leilao("XBox", 700.0, mauricio, false);
+
+        Calendar dataAntiga = Calendar.getInstance();
+        dataAntiga.add(Calendar.DAY_OF_MONTH, -7);
+
+        noLimite.setDataAbertura(dataAntiga);
+
+        usuarioDao.salvar(mauricio);
+        leilaoDao.salvar(noLimite);
+
+        List<Leilao> antigos = leilaoDao.antigos();
+
+        assertEquals(1, antigos.size());
+    }
+    
 }
