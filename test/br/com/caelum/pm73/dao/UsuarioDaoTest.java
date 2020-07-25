@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.caelum.pm73.dominio.Leilao;
 import br.com.caelum.pm73.dominio.Usuario;
 
 public class UsuarioDaoTest {
@@ -53,5 +54,29 @@ public class UsuarioDaoTest {
 
 		assertNull(usuarioDoBanco);
 	}
+	
+	@Test
+    public void deveContarLeiloesNaoEncerrados() {
+        // criamos um usuario
+        Usuario mauricio = 
+                new Usuario("Mauricio Aniche", "mauricio@aniche.com.br");
+
+        // criamos os dois leiloes
+        Leilao ativo = 
+                new Leilao("Geladeira", 1500.0, mauricio, false);
+        Leilao encerrado = 
+                new Leilao("XBox", 700.0, mauricio, false);
+        encerrado.encerra();
+
+        // persistimos todos no banco
+        usuarioDao.salvar(mauricio);
+        leilaoDao.salvar(ativo);
+        leilaoDao.salvar(encerrado);
+
+        // pedimos o total para o DAO
+        long total = leilaoDao.total();
+
+        assertEquals(1L, total);
+    }
 
 }
