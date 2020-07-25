@@ -78,5 +78,23 @@ public class UsuarioDaoTest {
 
         assertEquals(1L, total);
     }
+	
+	@Test
+	public void deveRetornarZeroSeNaoHaLeiloesNovos() {
+		Usuario mauricio = new Usuario("Mauricio Aniche", "mauricio@aniche.com.br");
+
+		Leilao encerrado = new Leilao("XBox", 700.0, mauricio, false);
+		Leilao tambemEncerrado = new Leilao("Geladeira", 1500.0, mauricio, false);
+		encerrado.encerra();
+		tambemEncerrado.encerra();
+
+		usuarioDao.salvar(mauricio);
+		leilaoDao.salvar(encerrado);
+		leilaoDao.salvar(tambemEncerrado);
+
+		long total = leilaoDao.total();
+
+		assertEquals(0L, total);
+	}
 
 }
