@@ -281,5 +281,25 @@ public class LeilaoDaoTest {
         List<Leilao> leiloes = leilaoDao.listaLeiloesDoUsuario(comprador);
         assertEquals(1, leiloes.size());
         assertEquals(leilao, leiloes.get(0));
+    }
+    
+    @Test
+    public void listaDeLeiloesDeUmUsuarioNaoTemRepeticao() throws Exception {
+        Usuario dono = new Usuario("Mauricio", "m@a.com");
+        Usuario comprador = new Usuario("Victor", "v@v.com");
+        
+        Leilao leilao = new LeilaoBuilder()
+            .comDono(dono)
+            .comLance(Calendar.getInstance(), comprador, 100.0)
+            .comLance(Calendar.getInstance(), comprador, 200.0)
+            .constroi();
+        
+        usuarioDao.salvar(dono);
+        usuarioDao.salvar(comprador);
+        leilaoDao.salvar(leilao);
+
+        List<Leilao> leiloes = leilaoDao.listaLeiloesDoUsuario(comprador); //teste falha porque a query do listaLeiloesDoUsuario tem um bug, pois a lista retornada contem repeticoes.
+        assertEquals(1, leiloes.size());
+        assertEquals(leilao, leiloes.get(0));
     }    
 }
