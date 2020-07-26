@@ -183,4 +183,35 @@ public class LeilaoDaoTest {
         assertEquals("XBox", leiloes.get(0).getNome());
     }
 
+    @Test
+    public void naoDeveTrazerLeiloesEncerradosNoPeriodo() {
+
+        // criando as datas
+        Calendar comecoDoIntervalo = Calendar.getInstance();
+        comecoDoIntervalo.add(Calendar.DAY_OF_MONTH, -10);
+        Calendar fimDoIntervalo = Calendar.getInstance();
+        Calendar dataDoLeilao1 = Calendar.getInstance();
+        dataDoLeilao1.add(Calendar.DAY_OF_MONTH, -2);
+
+        Usuario mauricio = new Usuario("Mauricio Aniche",
+                "mauricio@aniche.com.br");
+
+        // criando os leiloes, cada um com uma data
+        Leilao leilao1 = 
+                new Leilao("XBox", 700.0, mauricio, false);
+        leilao1.setDataAbertura(dataDoLeilao1);
+        leilao1.encerra();
+
+        // persistindo os objetos no banco
+        usuarioDao.salvar(mauricio);
+        leilaoDao.salvar(leilao1);
+
+        // invocando o metodo para testar
+        List<Leilao> leiloes = 
+                leilaoDao.porPeriodo(comecoDoIntervalo, fimDoIntervalo);
+
+        // garantindo que a query funcionou
+        assertEquals(0, leiloes.size());
+    }    
+
 }
